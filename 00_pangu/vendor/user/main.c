@@ -1,6 +1,11 @@
+#include "main.h"
+
 #include "stm32f1xx.h"
 
-#include<stdio.h>
+#include "app.h"
+#include "gpio_config.h"
+
+#include <stdio.h>
 
 extern void SystemClock_Config(void);
 
@@ -8,8 +13,14 @@ int main(void)
 {
     HAL_Init();
     SystemClock_Config();
+    gpioInit();
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET); // LED0 ON
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET); // LED1 ON
+    runAppInit();
 
-    while(1);
+    while(1) {
+        HAL_Delay(1000);
+    }
 }
 
 static void Error_Handler(void)

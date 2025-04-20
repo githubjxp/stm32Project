@@ -1,2 +1,0 @@
----- HAL_MODULE_ENABLED Matches (1 in 0 files) ----
-stm32f1xx_hal_conf.h (stm32\stm32f1xx_HAL_Driver\UserCodeImplementation) line 37 : #define HAL_MODULE_ENABLED
