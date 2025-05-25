@@ -1,9 +1,9 @@
-/* 
-    File: 
-    Author: Jiangxiaoping
-    Date: 2025-04-14
-    Description: 
-*/
+/**
+ * @file
+ * @author jiangxiaoping
+ * @date 2025-04-14
+ * @version v1.0.0
+ */
 
 #ifndef _GPIO_CONFIG_H
 #define _GPIO_CONFIG_H
@@ -22,6 +22,8 @@ typedef struct {
 
 typedef enum {
     GPIO_ID_GPIOA0 = 0,
+    GPIO_ID_GPIOA9 = 9,
+    GPIO_ID_GPIOA10 = 10,
     GPIO_ID_GPIOB0 = 16,
     GPIO_ID_GPIOB5 = 21,
     GPIO_ID_GPIOC0 = 32,
@@ -36,6 +38,8 @@ typedef enum {
 typedef enum {
     GPIO_FUNC_ID_LED0 = 0,
     GPIO_FUNC_ID_LED1,
+    GPIO_FUNC_ID_USART1_TX,
+    GPIO_FUNC_ID_USART1_RX,
     GPIO_FUNC_ID_INVALID = 0xFF,
 } GpioFuncId_t;
 

@@ -42,7 +42,7 @@ extern "C" {
 #define HAL_CORTEX_MODULE_ENABLED
 //#define HAL_CRC_MODULE_ENABLED
 //#define HAL_DAC_MODULE_ENABLED
-//#define HAL_DMA_MODULE_ENABLED
+#define HAL_DMA_MODULE_ENABLED
 //#define HAL_ETH_MODULE_ENABLED
 //#define HAL_EXTI_MODULE_ENABLED
 #define HAL_FLASH_MODULE_ENABLED
@@ -64,7 +64,7 @@ extern "C" {
 //#define HAL_SPI_MODULE_ENABLED
 //#define HAL_SRAM_MODULE_ENABLED
 //#define HAL_TIM_MODULE_ENABLED
-//#define HAL_UART_MODULE_ENABLED
+#define HAL_UART_MODULE_ENABLED
 //#define HAL_USART_MODULE_ENABLED
 //#define HAL_WWDG_MODULE_ENABLED
 //#define HAL_MMC_MODULE_ENABLED
@@ -148,7 +148,7 @@ extern "C" {
 #define  USE_HAL_SRAM_REGISTER_CALLBACKS        0U /* SRAM register callback disabled      */
 #define  USE_HAL_SPI_REGISTER_CALLBACKS         0U /* SPI register callback disabled       */
 #define  USE_HAL_TIM_REGISTER_CALLBACKS         0U /* TIM register callback disabled       */
-#define  USE_HAL_UART_REGISTER_CALLBACKS        0U /* UART register callback disabled      */
+#define  USE_HAL_UART_REGISTER_CALLBACKS        1U /* UART register callback disabled      */
 #define  USE_HAL_USART_REGISTER_CALLBACKS       0U /* USART register callback disabled     */
 #define  USE_HAL_WWDG_REGISTER_CALLBACKS        0U /* WWDG register callback disabled      */
 

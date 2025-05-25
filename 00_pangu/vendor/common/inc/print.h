@@ -10,54 +10,65 @@
 
 // #include "portmacro.h"
 
-#include <stdio.h>
+#include "stm32f1xx.h"
 
-#define portENTER_CRITICAL() 
-#define portEXIT_CRITICAL() // Exit critical section
+#include <stdio.h>
 
 #define PRINT_LEVEL_DEBUG  1
 #define PRINT_LEVEL_INFO   2
 #define PRINT_LEVEL_WARN   3
 #define PRINT_LEVEL_ERROR  4
+#define PRINT_LEVEL_NO_PRINT 5
+
+#define PRINT_FOR_TEST_ENABLE 1
 
 #ifndef PRINT_LEVEL
 #define PRINT_LEVEL PRINT_LEVEL_INFO
 #endif
 
+// #define JXP_FOR_TEST
+#ifndef JXP_FOR_TEST
+#define LINE_BREAK "\r\n"
 #define PRINT_DEBUG(fmt, ...) \
     do { \
         if (PRINT_LEVEL <= PRINT_LEVEL_DEBUG) { \
-            portENTER_CRITICAL(); \
-            printf("[DEBUG] %s:" fmt "\n", __func__, ##__VA_ARGS__); \
-            portEXIT_CRITICAL(); \
+            printf("[%u][DEBUG] %s: "fmt""LINE_BREAK, HAL_GetTick(), __func__, ##__VA_ARGS__); \
         } \
     } while (0)
 
 #define PRINT_INFO(fmt, ...) \
     do { \
         if (PRINT_LEVEL <= PRINT_LEVEL_INFO) { \
-            portENTER_CRITICAL(); \
-            printf("[INFO] %s:" fmt "\n", __func__, ##__VA_ARGS__); \
-            portEXIT_CRITICAL(); \
+            printf("[%u][INFO] %s: "fmt""LINE_BREAK, HAL_GetTick(), __func__, ##__VA_ARGS__); \
         } \
     } while (0)
 
 #define PRINT_WARN(fmt, ...) \
     do { \
         if (PRINT_LEVEL <= PRINT_LEVEL_WARN) { \
-            portENTER_CRITICAL(); \
-            printf("[WARN] %s:" fmt "\n", __func__, ##__VA_ARGS__); \
-            portEXIT_CRITICAL(); \
+            printf("[%u][WARN] %s: "fmt""LINE_BREAK, HAL_GetTick(), __func__, ##__VA_ARGS__); \
         } \
     } while (0)
 
 #define PRINT_ERROR(fmt, ...) \
     do { \
         if (PRINT_LEVEL <= PRINT_LEVEL_ERROR) { \
-            portENTER_CRITICAL(); \
-            printf("[ERROR] %s:" fmt "\n", __func__, ##__VA_ARGS__); \
-            portEXIT_CRITICAL(); \
+            printf("[%u][ERROR] %s: "fmt""LINE_BREAK, HAL_GetTick(), __func__, ##__VA_ARGS__); \
         } \
     } while (0)
+
+#define PRINT_FOR_TEST(fmt, ...) \
+    do { \
+        if (PRINT_FOR_TEST_ENABLE) { \
+            printf("[%u][TEST] %s: "fmt""LINE_BREAK, HAL_GetTick(), __func__, ##__VA_ARGS__); \
+        } \
+    } while (0)
+#else
+#define PRINT_INFO
+#define PRINT_DEBUG
+#define PRINT_WARN
+#define PRINT_ERROR
+#define PRINT_FOR_TEST
+#endif
 
 #endif

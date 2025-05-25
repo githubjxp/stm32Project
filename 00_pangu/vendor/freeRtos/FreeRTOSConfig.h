@@ -42,6 +42,8 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+extern uint32_t SystemCoreClock; // 72000000
+
 /******************************************************************************/
 /* Hardware description related definitions. **********************************/
 /******************************************************************************/
@@ -51,7 +53,7 @@
  * The default value is set to 20MHz and matches the QEMU demo settings.  Your
  * application will certainly need a different value so set this correctly.
  * This is very often, but not always, equal to the main system clock frequency. */
-#define configCPU_CLOCK_HZ    ( ( unsigned long ) 72000000 )
+#define configCPU_CLOCK_HZ    SystemCoreClock
 
 /* configSYSTICK_CLOCK_HZ is an optional parameter for ARM Cortex-M ports only.
  *
@@ -310,13 +312,22 @@
  * ARM Cortex-M devices. */
 #define configKERNEL_INTERRUPT_PRIORITY          15
 
+// user define
+#ifdef __NVIC_PRIO_BITS
+ /* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
+ #define configPRIO_BITS         __NVIC_PRIO_BITS
+#else
+ #define configPRIO_BITS         4
+#endif
+// user define
+
 /* configMAX_SYSCALL_INTERRUPT_PRIORITY sets the interrupt priority above which
  * FreeRTOS API calls must not be made.  Interrupts above this priority are never
  * disabled, so never delayed by RTOS activity.  The default value is set to the
  * highest interrupt priority (0).  Not supported by all FreeRTOS ports.
  * See https://www.freertos.org/RTOS-Cortex-M3-M4.html for information specific to
  * ARM Cortex-M devices. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY     5
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY     (5 << (8 - configPRIO_BITS))
 
 /* Another name for configMAX_SYSCALL_INTERRUPT_PRIORITY - the name used depends
  * on the FreeRTOS port. */
@@ -331,7 +342,7 @@
  * build.  The application writer is responsible for providing the hook function
  * for any set to 1.  See https://www.freertos.org/a00016.html. */
 #define configUSE_IDLE_HOOK                   0
-#define configUSE_TICK_HOOK                   0
+#define configUSE_TICK_HOOK                   1
 #define configUSE_MALLOC_FAILED_HOOK          0
 #define configUSE_DAEMON_TASK_STARTUP_HOOK    0
 
@@ -630,19 +641,22 @@
 #define INCLUDE_vTaskPrioritySet               1
 #define INCLUDE_uxTaskPriorityGet              1
 #define INCLUDE_vTaskDelete                    1
-#define INCLUDE_vTaskSuspend                   1
+#define INCLUDE_vTaskSuspend                   1 // vTaskSuspend() 挂起任务
 #define INCLUDE_xResumeFromISR                 1
 #define INCLUDE_vTaskDelayUntil                1
 #define INCLUDE_vTaskDelay                     1
 #define INCLUDE_xTaskGetSchedulerState         1
-#define INCLUDE_xTaskGetCurrentTaskHandle      1
+#define INCLUDE_xTaskGetCurrentTaskHandle      1 // xTaskGetCurrentTaskHandle() 获取当前任务句柄
 #define INCLUDE_uxTaskGetStackHighWaterMark    1
-#define INCLUDE_xTaskGetIdleTaskHandle         1
+#define INCLUDE_xTaskGetIdleTaskHandle         1 // xTaskGetIdleTaskHandle() 获取空闲任务句柄
 #define INCLUDE_eTaskGetState                  1
 #define INCLUDE_xEventGroupSetBitFromISR       1
 #define INCLUDE_xTimerPendFunctionCall         1
 #define INCLUDE_xTaskAbortDelay                1
-#define INCLUDE_xTaskGetHandle                 1
+#define INCLUDE_xTaskGetHandle                 1 // xTaskGetHandle() 获取任务句柄
 #define INCLUDE_xTaskResumeFromISR             1
 
+#define vPortSVCHandler SVC_Handler
+#define xPortPendSVHandler PendSV_Handler
+// #define xPortSysTickHandler SysTick_Handler // use in stm32f1xx_it.c
 #endif /* FREERTOS_CONFIG_H */

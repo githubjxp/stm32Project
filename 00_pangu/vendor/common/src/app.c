@@ -7,98 +7,11 @@
  
 #include "app.h"
 
+#include "app_list.h"
 #include "print.h"
 #include "tag.h"
 
-#include <stdlib.h>
-
-AppListNode_t *appCreateNode(App_t *app)
-{
-    if (app == NULL) {
-        PRINT_ERROR("app is NULL!");
-        return NULL; 
-    }
-
-    AppListNode_t *newNode = (AppListNode_t *)malloc(sizeof(AppListNode_t));
-    if (newNode == NULL) {
-        PRINT_ERROR("AppListNode_t malloc failed!");
-        return NULL;
-    }
-
-    newNode->app = app;
-    newNode->prev = NULL;
-    newNode->next = NULL;
-}
-
-void appInsertNodeAtHead(AppListNode_t **head, App_t *app)
-{
-    AppListNode_t *newNode = appCreateNode(app);
-    if (newNode == NULL)
-        return;
-
-    if (*head == NULL) {
-        *head = newNode;
-    } else {
-        (*head)->prev = newNode;
-        newNode->next = *head;
-        *head = newNode;
-    }
-}
-
-void appInsertNodeAtTail(AppListNode_t **head, App_t *app)
-{
-    AppListNode_t *newNode = appCreateNode(app);
-    if (newNode == NULL)
-        return;
-
-    if (*head == NULL) {
-        *head = newNode;
-    } else {
-        AppListNode_t *current = *head;
-        while (current->next != NULL) {
-            current = current->next;
-        }
-        current->next = newNode;
-        newNode->prev = current;
-    }
-}
-
-void appDeleteNodeByTag(AppListNode_t **head, uint32_t tag)
-{
-    if (*head == NULL || tag >= APP_TAG_END) {
-        PRINT_DEBUG("head is NULL or tag is invalid");
-        return;
-    }
-
-    AppListNode_t *current = *head;
-    while(current != NULL) {
-        if (current->app->tag == tag) {
-            if (current->prev == NULL) {
-                current = current->next;
-            } else {
-                current->prev->next = current->next;
-                current->next->prev = current->prev;
-                free(current);
-            }
-            PRINT_INFO("app tag%d is free", tag);
-        }
-        current = current->next;
-    }
-}
-
-AppListNode_t *appGetNodeByTag(AppListNode_t *head, uint32_t tag)
-{
-    AppListNode_t *current = head;
-    while (current != NULL) {
-        if (current->app->tag == tag) {
-            return current;
-        }
-        current = current->next;
-    }
-    return NULL;
-}
-
-AppListNode_t *g_app_list_head = NULL;
+static AppListNode_t *g_app_list_head = NULL;
 void appRegister(App_t *app)
 {
     if (app == NULL) {
@@ -114,25 +27,28 @@ void appRegister(App_t *app)
     appInsertNodeAtTail(&g_app_list_head, app);
 }
 
-// extern uint32_t Image$$APP_INIT$$Base;
-// extern uint32_t Image$$APP_INIT$$Limit;
+extern uint32_t Image$$APP_INIT_RAM$$Base;
+uint32_t __attribute__((section(".app_init_end"), used)) app_init_end_symbol = 0;
 
-// void getAppInitSectionValues(void) {
-//     uint32_t appInitStart = Image$$APP_INIT$$Base;
-//     uint32_t appInitEnd = Image$$APP_INIT$$Limit;
-//     for (AppInitFunc_t *func = appInitStart; func < appInitEnd; func++) {
-//         if (*func) {
-//             (*func)(); // 执行初始化函数
-//         }
-//         break;
-//     }
-// }
+static void runAppRegister(void) {
+    AppInitFunc_t *appInitStart = (AppInitFunc_t *)&Image$$APP_INIT_RAM$$Base;
+    AppInitFunc_t *appInitEnd = (AppInitFunc_t *)&app_init_end_symbol;
 
-// void runAppInit(void) {
-//     getAppInitSectionValues();
-// }
-
-#include "led.h"
-void runAppInit(void) {
-    ledAppInit();
+    for (AppInitFunc_t *func = appInitStart; func < appInitEnd; func++) {
+        if (*func)
+            (*func)(); // register app
+    }
 }
+
+void runAppInit(void) {
+    runAppRegister();
+
+    AppListNode_t *current = g_app_list_head;
+    while (current != NULL) {
+        if (current->app->ops->init) {
+            current->app->ops->init(current->app);
+        }
+        current = current->next;
+    }
+}
+

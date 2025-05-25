@@ -1,16 +1,20 @@
-/* 
-    File: 
-    Author: Jiangxiaoping
-    Date: 2025-04-14
-    Description: 
-*/
+/**
+ * @file
+ * @author jiangxiaoping
+ * @date 2025-04-14
+ * @version v1.0.0
+ */
 
 #include "gpio_config.h"
 
 #include "stm32f1xx.h"
 
+#include "print.h"
+
 
 const GpioConfig_t g_gpioTbl[] = {
+    {GPIO_ID_GPIOA9, GPIOA, GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, GPIO_FUNC_ID_USART1_TX},
+    {GPIO_ID_GPIOA10, GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, GPIO_FUNC_ID_USART1_RX},
     {GPIO_ID_GPIOB5, GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, GPIO_FUNC_ID_LED0},
     {GPIO_ID_GPIOE5, GPIOE, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, GPIO_FUNC_ID_LED1},
 
@@ -57,4 +61,6 @@ void gpioInit(void)
         gpioInitStruct.Speed = g_gpioTbl[i].speed;
         HAL_GPIO_Init(g_gpioTbl[i].gpio, &gpioInitStruct);
     }
+
+    __HAL_RCC_AFIO_CLK_ENABLE(); // Enable AFIO clock
 }

@@ -4,6 +4,11 @@
 
 #include "app.h"
 #include "gpio_config.h"
+#include "dma_config.h"
+#include "dma_it.h"
+#include "uart_config.h"
+#include "uart_it.h"
+#include "print.h"
 
 #include <stdio.h>
 
@@ -13,14 +18,48 @@ int main(void)
 {
     HAL_Init();
     SystemClock_Config();
+
+    // driver init
     gpioInit();
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET); // LED0 ON
-    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_SET); // LED1 ON
+    dmaInit();
+    uartInit();
+
+    // // app init
     runAppInit();
 
+    // // MCU info
+    MCU_Base_Info_Print();
+
+    HAL_Delay(2000);
+    taskEnter();
+  
     while(1) {
-        HAL_Delay(1000);
+        // HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5); // Toggle LED0
+        // HAL_Delay(250);
+        // if (g_uart1RxProcessBuffer[UART_RX_PROCESS_BUFFER_SIZE - 1] == 0x77) {
+        //     PRINT_FOR_TEST("Received: %s", g_uart1RxProcessBuffer);
+        //     g_uart1RxProcessBuffer[UART_RX_PROCESS_BUFFER_SIZE - 1] = 0; // Clear the flag
+        //     memcpy(g_uart1RxProcessBuffer, "Hello World!\r\n", 14); // Just for test
+        //     HAL_UART_Transmit_IT(getUartHandleByFuncID(UART_FUNC_ID_PC_COMMUNICATION), g_uart1RxProcessBuffer, 14);
+        // }
+        PRINT_INFO("main loop");
+        HAL_Delay(2000);
     }
+}
+
+void MCU_Base_Info_Print(void)
+{
+    PRINT_INFO("mcu base info");
+    PRINT_INFO("mcu id: %x", HAL_GetDEVID());
+    PRINT_INFO("mcu rev: %x", HAL_GetREVID());
+    PRINT_INFO("mcu uid: %x %x %x", HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
+    PRINT_INFO("mcu vtor: %x", SCB->VTOR);
+    PRINT_INFO("mcu stack: %x", __get_MSP());
+    PRINT_INFO("mcu heap: %x", __get_MSP() - 0x2000); // 8KB SRAM
+    PRINT_INFO("system clock: %d", HAL_RCC_GetSysClockFreq());
+    PRINT_INFO("system tick: %d", HAL_GetTickFreq());
+    PRINT_INFO("SystemCoreClock: %d", SystemCoreClock);
+    PRINT_INFO("uwTickPrio: %d", uwTickPrio);
 }
 
 static void Error_Handler(void)

@@ -76,19 +76,22 @@ static int32_t ledProcessData(App_t *app, uint32_t tag, uint8_t *data, uint32_t 
     return SUCCESS;
 }
 
-static int32_t ledInit()
+static int32_t ledInit(App_t *app)
 {
-    g_ledTbl[LED0].gpioConf = getGpioConfigByFuncID(g_ledTbl[LED0].gpio_func_id);
-    if (g_ledTbl[LED0].gpioConf == NULL) {
-        PRINT_ERROR("g_ledTbl[LED0].gpioConf is NULL!");
+    if (app == NULL) {
+        PRINT_ERROR("app is NULL!");
         return ERROR;
     }
 
-    g_ledTbl[LED1].gpioConf = getGpioConfigByFuncID(g_ledTbl[LED1].gpio_func_id);
-    if (g_ledTbl[LED1].gpioConf == NULL) {
-        PRINT_ERROR("g_ledTbl[LED1].gpioConf is NULL!");
-        return ERROR;
+    for (int i = 0; i < LED_MAX; i++) {
+        g_ledTbl[i].gpioConf = getGpioConfigByFuncID(g_ledTbl[i].gpio_func_id);
+        if (g_ledTbl[i].gpioConf == NULL) {
+            PRINT_ERROR("g_ledTbl[%d].gpioConf is NULL!", i);
+            return ERROR;
+        }
     }
+
+    app->priv = &g_ledTbl;
 
     ledEnable(&g_ledTbl[LED0], LED_STATE_ON);
     ledEnable(&g_ledTbl[LED1], LED_STATE_ON);
@@ -112,13 +115,10 @@ static App_t ledApp = {
     .ops = &ledOps,
 };
 
-void ledAppInit(void)
+void ledAppRegister(void)
 {
-    ledApp.priv = &g_ledTbl;
     appRegister(&ledApp);
-    ledInit();
-    PRINT_INFO("ledAppInit() done!");
+    PRINT_INFO("ledAppRegister done!");
 }
 
-
-// APP_INIT(ledAppInit);
+APP_INIT(ledAppRegister);

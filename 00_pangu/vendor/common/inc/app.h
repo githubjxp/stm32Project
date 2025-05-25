@@ -21,20 +21,13 @@ typedef struct {
    AppOps_t *ops;
 } App_t;
 
-typedef struct AppOps_t{
+struct AppOps_t {
    int32_t (*init)(App_t *app);
    int32_t (*open)(App_t *app);
    int32_t (*close)(App_t *app);
    int32_t (*processData)(App_t *app, uint32_t tag, uint8_t *data, uint32_t len);
    int32_t (*config)(App_t *app, void *config);     
 };
-
-typedef struct AppListNode_t{
-   App_t *app;
-   struct AppListNode_t *prev;
-   struct AppListNode_t *next;
-};
-typedef struct AppListNode_t AppListNode_t;
 
 typedef void (*AppInitFunc_t)(void);
 #define APP_INIT(func) __attribute__((section(".app_init"), used)) AppInitFunc_t func##_init = func;
