@@ -15,13 +15,8 @@
 
 #include "stdbool.h"
 
-#define UART_RX_BUFFER_SIZE UART_RX_PROCESS_BUFFER_SIZE
-static uint8_t g_uart1RxBuffer[UART_RX_BUFFER_SIZE] = {0};
-uint8_t g_uart1RxProcessBuffer[UART_RX_PROCESS_BUFFER_SIZE] = {0}; // just for process
-
-#define UART_TX_BUFFER_SIZE 4
-static uint8_t g_uart1TxBuffer[UART_TX_BUFFER_SIZE] = {0};
-
+uint8_t g_uart1RxBuff0[UART_RX_BUFF_SIZE] = {0};
+uint8_t g_uart1RxBuff1[UART_RX_BUFF_SIZE] = {0};
 
 /**
  * Note: If USART1, USART2, or USART3 are configured to use synchronous mode,
@@ -40,9 +35,9 @@ static UART_HandleTypeDef huart[] = {
         .Init.OverSampling = UART_OVERSAMPLING_16,
 
         // 不需要配置这些参数，传输时传入，ptr会自动变化
-        // .pRxBuffPtr = g_uart1RxBuffer,
-        // .RxXferSize =  UART_RX_BUFFER_SIZE,
-        // .RxXferCount = UART_RX_BUFFER_SIZE,
+        // .pRxBuffPtr = g_uart1RxBuff0,
+        // .RxXferSize =  UART_RX_BUFF_SIZE,
+        // .RxXferCount = UART_RX_BUFF_SIZE,
         // .pTxBuffPtr = g_uart1TxBuffer,
         // .TxXferSize = UART_TX_BUFFER_SIZE,
         // .TxXferCount = UART_TX_BUFFER_SIZE,
@@ -60,7 +55,18 @@ UartConfig_t g_uartConfigTbl[] = {
         .dmaTxFuncId = DMA_FUNC_ID_USART1_TX,
         .dmaRxFuncId = DMA_FUNC_ID_USART1_RX,
         .uartFuncId = UART_FUNC_ID_PC_COMMUNICATION,
-        .status = HAL_NO_INITIALIZATION,
+        .status = HAL_ERROR,
+        .rxBuff0 = {
+            .buff = g_uart1RxBuff0,
+            .size = UART_RX_BUFF_SIZE,
+            .pos = 0,
+        },
+        .rxBuff1 = {
+            .buff = g_uart1RxBuff1,
+            .size = UART_RX_BUFF_SIZE,
+            .pos = 0,
+        },
+        .rxBuffState = UART_BUFF_STATE_UNUSED,
     }
 };
 
@@ -136,10 +142,11 @@ void uartInit(void)
             g_uartConfigTbl[i].status = HAL_OK;
 
             if (g_uartConfigTbl[i].uart->hdmarx != NULL) {
-                HAL_UARTEx_ReceiveToIdle_DMA(g_uartConfigTbl[i].uart, g_uart1RxProcessBuffer, UART_RX_BUFFER_SIZE);
+                HAL_UARTEx_ReceiveToIdle_DMA(g_uartConfigTbl[i].uart, g_uart1RxBuff0, UART_RX_BUFF_SIZE);
             } else {
-                HAL_UARTEx_ReceiveToIdle_IT(g_uartConfigTbl[i].uart, g_uart1RxProcessBuffer, UART_RX_BUFFER_SIZE);   
+                HAL_UARTEx_ReceiveToIdle_IT(g_uartConfigTbl[i].uart, g_uart1RxBuff0, UART_RX_BUFF_SIZE);   
             }
+            g_uartConfigTbl[i].rxBuffState = UART_BUFF_STATE_BUFF0_RECEIVING;
         }   
     }
 }

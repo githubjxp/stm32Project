@@ -44,7 +44,7 @@ static DmaConfig_t g_dmaConfigTbl[] = {
             .subPriority = 0,
         },
         .funcId = DMA_FUNC_ID_USART1_TX,
-        .status = HAL_NO_INITIALIZATION,
+        .status = HAL_ERROR,
     },
     {
         .dma = &hdma[1],
@@ -54,7 +54,7 @@ static DmaConfig_t g_dmaConfigTbl[] = {
             .subPriority = 0,
         },
         .funcId = DMA_FUNC_ID_USART1_RX,
-        .status = HAL_NO_INITIALIZATION,
+        .status = HAL_ERROR,
     },
 };
 

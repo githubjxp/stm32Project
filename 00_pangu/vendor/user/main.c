@@ -13,6 +13,7 @@
 #include <stdio.h>
 
 extern void SystemClock_Config(void);
+extern void MCU_Base_Info_Print(void);
 
 int main(void)
 {
@@ -30,18 +31,10 @@ int main(void)
     // // MCU info
     MCU_Base_Info_Print();
 
-    HAL_Delay(2000);
+    HAL_Delay(1000);
     taskEnter();
   
     while(1) {
-        // HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5); // Toggle LED0
-        // HAL_Delay(250);
-        // if (g_uart1RxProcessBuffer[UART_RX_PROCESS_BUFFER_SIZE - 1] == 0x77) {
-        //     PRINT_FOR_TEST("Received: %s", g_uart1RxProcessBuffer);
-        //     g_uart1RxProcessBuffer[UART_RX_PROCESS_BUFFER_SIZE - 1] = 0; // Clear the flag
-        //     memcpy(g_uart1RxProcessBuffer, "Hello World!\r\n", 14); // Just for test
-        //     HAL_UART_Transmit_IT(getUartHandleByFuncID(UART_FUNC_ID_PC_COMMUNICATION), g_uart1RxProcessBuffer, 14);
-        // }
         PRINT_INFO("main loop");
         HAL_Delay(2000);
     }
@@ -49,7 +42,6 @@ int main(void)
 
 void MCU_Base_Info_Print(void)
 {
-    PRINT_INFO("mcu base info");
     PRINT_INFO("mcu id: %x", HAL_GetDEVID());
     PRINT_INFO("mcu rev: %x", HAL_GetREVID());
     PRINT_INFO("mcu uid: %x %x %x", HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
@@ -64,7 +56,11 @@ void MCU_Base_Info_Print(void)
 
 static void Error_Handler(void)
 {
-    return;
+  while (1)
+  {
+    HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
+    HAL_Delay(500);
+  }
 }
 
 void SystemClock_Config(void)

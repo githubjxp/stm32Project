@@ -8,15 +8,21 @@
 #ifndef __USER_TASK_H
 #define __USER_TASK_H
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 // led task
 #define LED_TASK_STACK_SIZE 128
 #define LED_TASK_PRIORITY   1
 #define LED_TASK_NAME      "ledTask"
 
 // command task
-#define COMMAND_TASK_STACK_SIZE 128
-#define COMMAND_TASK_PRIORITY   1
-#define COMMAND_TASK_NAME      "commandTask"
+#define CMD_TASK_STACK_SIZE 128
+#define CMD_TASK_PRIORITY   1
+#define CMD_TASK_NAME      "commandTask"
+
+extern TaskHandle_t g_cmdTaskHandle;
+extern TaskHandle_t g_ledTaskHandle;
 
 void taskEnter(void);
 

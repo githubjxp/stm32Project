@@ -5,6 +5,10 @@
     Description: 
 */
 
+#include "UserConfigHook.h"
+
+#include "stm32f1xx.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -16,3 +20,9 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask,
 }
 #endif
 
+#if (configUSE_TICK_HOOK == 1)
+void vApplicationTickHook(void)
+{
+    // HAL_IncTick();  // 在FreeRTOS的Tick钩子中更新HAL计时
+}
+#endif

@@ -331,7 +331,7 @@ extern uint32_t SystemCoreClock; // 72000000
 
 /* Another name for configMAX_SYSCALL_INTERRUPT_PRIORITY - the name used depends
  * on the FreeRTOS port. */
-#define configMAX_API_CALL_INTERRUPT_PRIORITY    5
+#define configMAX_API_CALL_INTERRUPT_PRIORITY    configMAX_SYSCALL_INTERRUPT_PRIORITY
 
 /******************************************************************************/
 /* Hook and callback function related definitions. ****************************/
@@ -641,19 +641,19 @@ extern uint32_t SystemCoreClock; // 72000000
 #define INCLUDE_vTaskPrioritySet               1
 #define INCLUDE_uxTaskPriorityGet              1
 #define INCLUDE_vTaskDelete                    1
-#define INCLUDE_vTaskSuspend                   1 // vTaskSuspend() 挂起任务
+#define INCLUDE_vTaskSuspend                   1 // vTaskSuspend() 鎸傝捣浠诲姟
 #define INCLUDE_xResumeFromISR                 1
 #define INCLUDE_vTaskDelayUntil                1
 #define INCLUDE_vTaskDelay                     1
 #define INCLUDE_xTaskGetSchedulerState         1
-#define INCLUDE_xTaskGetCurrentTaskHandle      1 // xTaskGetCurrentTaskHandle() 获取当前任务句柄
+#define INCLUDE_xTaskGetCurrentTaskHandle      1 // xTaskGetCurrentTaskHandle() 鑾峰彇褰撳墠浠诲姟鍙ユ焺
 #define INCLUDE_uxTaskGetStackHighWaterMark    1
-#define INCLUDE_xTaskGetIdleTaskHandle         1 // xTaskGetIdleTaskHandle() 获取空闲任务句柄
+#define INCLUDE_xTaskGetIdleTaskHandle         1 // xTaskGetIdleTaskHandle() 鑾峰彇绌洪棽浠诲姟鍙ユ焺
 #define INCLUDE_eTaskGetState                  1
 #define INCLUDE_xEventGroupSetBitFromISR       1
 #define INCLUDE_xTimerPendFunctionCall         1
 #define INCLUDE_xTaskAbortDelay                1
-#define INCLUDE_xTaskGetHandle                 1 // xTaskGetHandle() 获取任务句柄
+#define INCLUDE_xTaskGetHandle                 1 // xTaskGetHandle() 鑾峰彇浠诲姟鍙ユ焺
 #define INCLUDE_xTaskResumeFromISR             1
 
 #define vPortSVCHandler SVC_Handler
