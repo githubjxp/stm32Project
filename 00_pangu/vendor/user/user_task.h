@@ -21,8 +21,20 @@
 #define CMD_TASK_PRIORITY   1
 #define CMD_TASK_NAME      "commandTask"
 
+// I2C task
+#define I2C_TASK_STACK_SIZE 128
+#define I2C_TASK_PRIORITY   1
+#define I2C_TASK_NAME      "i2cTask"
+
+// SPI task
+#define SPI_TASK_STACK_SIZE 128
+#define SPI_TASK_PRIORITY   1
+#define SPI_TASK_NAME      "spiTask"
+
 extern TaskHandle_t g_cmdTaskHandle;
 extern TaskHandle_t g_ledTaskHandle;
+extern TaskHandle_t g_i2cTaskHandle;
+extern TaskHandle_t g_spiTaskHandle;
 
 void taskEnter(void);
 

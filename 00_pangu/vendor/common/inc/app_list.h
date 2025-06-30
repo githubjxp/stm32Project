@@ -16,8 +16,7 @@ typedef struct AppListNode_t {
 	App_t* app;
 	struct AppListNode_t* prev;
 	struct AppListNode_t* next;
-};
-typedef struct AppListNode_t AppListNode_t;
+} AppListNode_t;
 
 void appInsertNodeAtHead(AppListNode_t** head, App_t* app);
 void appInsertNodeAtTail(AppListNode_t** head, App_t* app);

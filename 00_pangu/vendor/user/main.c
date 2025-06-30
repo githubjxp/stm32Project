@@ -1,14 +1,18 @@
 #include "main.h"
 
-#include "stm32f1xx.h"
-
 #include "app.h"
-#include "gpio_config.h"
 #include "dma_config.h"
 #include "dma_it.h"
+#include "driver.h"
+#include "gpio_config.h"
+#include "i2c_config.h"
+#include "spi_config.h"
+#include "print.h"
 #include "uart_config.h"
 #include "uart_it.h"
-#include "print.h"
+
+#include "stm32f1xx.h"
+#include "trcRecorder.h"
 
 #include <stdio.h>
 
@@ -24,14 +28,20 @@ int main(void)
     gpioInit();
     dmaInit();
     uartInit();
+    i2cInit();
+    spiInit();
 
-    // // app init
+    // app init
+    runDriverInit();
     runAppInit();
 
-    // // MCU info
+    // MCU info
     MCU_Base_Info_Print();
 
-    HAL_Delay(1000);
+    // xTraceEnable(TRC_START); // ???????????
+    // PRINT_INFO("Trace recorder started");
+
+    // HAL_Delay(1000);
     taskEnter();
   
     while(1) {

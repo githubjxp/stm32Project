@@ -12,6 +12,22 @@
 #include "tag.h"
 
 static AppListNode_t *g_app_list_head = NULL;
+
+App_t *getAppByTag(const uint32_t tag)
+{
+    if (tag >= APP_TAG_END) {
+        PRINT_ERROR("tag is invalid!");
+        return NULL;
+    }
+
+    AppListNode_t *node = appGetNodeByTag(g_app_list_head, tag);
+    if (node != NULL)
+        return node->app;
+
+    PRINT_ERROR("app tag%d not exist", tag);
+    return NULL;
+}
+
 void appRegister(App_t *app)
 {
     if (app == NULL) {

@@ -108,7 +108,7 @@ extern uint32_t SystemCoreClock; // 72000000
 /* configMAX_PRIORITIES Sets the number of available task priorities.  Tasks can
  * be assigned priorities of 0 to (configMAX_PRIORITIES - 1).  Zero is the lowest
  * priority. */
-#define configMAX_PRIORITIES                       5
+#define configMAX_PRIORITIES                       56
 
 /* configMINIMAL_STACK_SIZE defines the size of the stack used by the Idle task
  * (in words, not in bytes!).  The kernel does not use this constant for any other
@@ -659,4 +659,6 @@ extern uint32_t SystemCoreClock; // 72000000
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 // #define xPortSysTickHandler SysTick_Handler // use in stm32f1xx_it.c
+
+#include "trcRecorder.h"
 #endif /* FREERTOS_CONFIG_H */
